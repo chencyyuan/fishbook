@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block mycss %}
+    <link rel="stylesheet" href="{% static 'css/personal.css' %}">
+{% endblock %}
+
+<div class='container'>
+{% block content %}
+    <div class="row">
+        <div style="margin-top:150px;" class="col-md-6 col-md-offset-3">
+            <div class="row">
+                {% if message %}
+                    <div class="alert alert-warning" role="alert">{{ message }}</div>
+                {% endif %}
+                <div class="col-md-2">
+                    <a onclick="window.history.go(-1)" href="#">返回</a>
+                </div>
+            </div>
+            <div class="bg-container">
+                <div class="row">
+                    <div class="col-md-4 col-md-offset-4 text-center">
+                        <span class="big-title">{{ user1.username }}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2 flex-vertical personal-detail">
+                        <div><span>当前鱼豆：</span><span>{{ user1.beans }}</span></div>
+                        <div><span>充值数量：</span><span>{{ ord.beans_num}}</span></div>
+                        <div><span>充值金额：</span><span>{{ ord.beanmoney}}</span></div>
+                        <div>
+                           <span  style="padding-left: 20%">
+                               <input type="submit" id="myButton" class="btn btn-primary" style="width: 100px" value="结 算">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+</div>
+{% block myjs %}
+<script>
+    $(function () {
+        $('#myButton').click(function () {
+            $.post('{% url 'trade:alipay' %}',{'order_no':'{{ord.order_sn}}','csrfmiddlewaretoken': "{{ csrf_token }}"},function(data){
+                window.open(data.url)
+            })
+            $.get('{% url 'trade:checkpay' %}',{'order_no':'{{ord.order_sn}}'},function(data){
+               if (0 == data.code) {
+                    // 支付成功
+                    alert("支付成功");
+                    window.location.href="{% url 'user:personal' %}"
+               } else {
+                    alert(data.message)
+               }
+             })
+          })
+
+    })
+
+</script>
+
+{% endblock %}

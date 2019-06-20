@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block mycss %}
+    <link rel="stylesheet" href="{% static 'css/personal.css' %}">
+{% endblock %}
+
+<div class='container'>
+{% block content %}
+    <div class="row">
+        <div style="margin-top:150px;" class="col-md-6 col-md-offset-3">
+            <div class="row">
+                {% if message %}
+                    <div class="alert alert-warning" role="alert">{{ message }}</div>
+                {% endif %}
+{#                {% if isorder %}#}
+{#                    <!-- 遮罩层 -->#}
+{#                    <div id="cover" style="background: #000; position: absolute; left: 0px; top: 0px; width: 100%; filter: alpha(opacity=30); opacity: 0.3; display: none; z-index: 2 ">#}
+{#                    </div>#}
+{#                    <!-- 弹窗 -->#}
+{#                    <div id="showdiv" style="width: 100%; margin: 0 auto; height: 12rem; display: none; position: absolute; top: 40%; left: 10%; z-index: 3; background: #fff">#}
+{#                      <!-- 标题 -->#}
+{#                      <div style="background: #F8F7F7; width: 100%; height: 2.5rem; font-size: 2.5rem; line-height: 2rem; border: 1px solid #999; text-align: center;" >#}
+{#                        充 值#}
+{#                      </div>#}
+{#                      <!-- 内容 -->#}
+{#                      <div style="text-indent: 50px; height: 4rem; font-size: 2.5rem; padding: 0.5rem; line-height: 2rem; ">#}
+{#                        鱼豆数量：<span>{{ ord.beans_num }}</span><br>#}
+{#                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;鱼豆金额：<span>{{ ord.beanmoney }}</span>#}
+{#                      </div>#}
+{#                      <!-- 按钮 -->#}
+{#                        <div style="background: #418BCA; width: 20%; margin-left: 6rem; height: 2.5rem; line-height: 2.5rem; text-align: center;color: #fff;margin-top: 2rem; border-radius: 0.8rem;font-size: 0.8rem; float: left" onclick="closeWindow()">#}
+{#                        取  消#}
+{#                      </div>#}
+{#                      <div style="background: #418BCA; width: 20%; margin-right: 6rem;height: 2.5rem; line-height: 2.5rem; text-align: center;color: #fff;margin-top: 2rem; border-radius: 0.8rem;font-size:0.8rem; float: right" onclick="closeWindow()" class="chongzhi">#}
+{#                        结  算#}
+{#                      </div>#}
+{#                    </div>#}
+{#                {% endif %}#}
+
+                <div class="col-md-2">
+                    <a onclick="window.history.go(-1)" href="#">返回</a>
+                </div>
+            </div>
+            <div class="bg-container">
+                <div class="row">
+                    <div class="col-md-4 col-md-offset-4 text-center">
+                        <span class="big-title">{{ user1.username }}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2 flex-vertical personal-detail">
+                        <div><span>送出/收到：</span><span>{{ user1.send_counter }}/{{ user1.receive_counter }}</span></div>
+                        <div><span>当前鱼豆：</span><span>{{ user1.beans }}</span></div>
+                        <div><span>登录邮箱：</span><span>{{ user1.email }}</span></div>
+                        <div><span>登录密码：********* </span><a
+                                href="{% url 'user:update_pwd' %}">修改</a>
+                        </div>
+                        <div><span>充值鱼豆：</span></div>
+                        <div>
+                           <span  style="padding-left: 20%">
+                                <form action="{% url 'trade:order' %}" method="get">
+                                    <input type="radio" value="1" name="beanmoney" id="fir"><label for="fir">1元/10颗</label><br>
+                                    <input type="radio" value="10" name="beanmoney" id="sec"><label for="sec">10元/110颗</label><br>
+                                    <input type="radio" value="100" name="beanmoney" id="thir"><label for="thir">100元/1200颗</label><br>
+                                    <input type="submit" id="myButton" class="btn btn-primary" style="width: 100px" value="充值"  onclick="showWindow()" >
+                                </form>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+</div>
+{% block myjs %}
+{#<script>#}
+{#    $(function () {#}
+        {#$('#myButton').click(function () {#}
+        {#    $.post('{% url 'trade:alipay' %},')#}
+        {#    #}
+        {#  })#}
+{##}
+{#    })#}
+{##}
+{#</script>#}
+{#<script type="text/javascript">#}
+{#  // 弹窗#}
+{#  function showWindow() {#}
+{#    $('#showdiv').show();  //显示弹窗#}
+{#    $('#cover').css('display','block'); //显示遮罩层#}
+{#    $('#cover').css('height',document.body.clientHeight+'px'); //设置遮罩层的高度为当前页面高度#}
+{#  }#}
+{#  // 关闭弹窗#}
+{#  function closeWindow() {#}
+{#    $('#showdiv').hide();  //隐藏弹窗#}
+{#    $('#cover').css('display','none');   //显示遮罩层#}
+{#  }#}
+{#</script>#}
+{% endblock %}

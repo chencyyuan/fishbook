@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+
+<div class='container'>
+{% block content %}
+    <div class="row">
+    </div>
+    
+    <div class="row white-bg-margin">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="row">
+                {% if msg or errors %}
+                    <div class="alert alert-warning" role="alert">{{ msg }}<br>{{ errors }}</div>
+                {% endif %}
+            </div>
+            <div class="bg-container">
+                <div class="row">
+                    <div class="col-md-4 col-md-offset-4 text-center">
+                        <span class="big-title">鱼 书</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2 flex-vertical personal-detail">
+                        <form action="{% url 'user:register' %}" method="post">{% csrf_token %}
+                            <input style="width:100%" id="username" name="username"
+                                   type="text"
+                                   placeholder="昵称"
+                                   class="none-input"
+                                   value="">
+                            <input style="width:100%" id="email" name="email" type="text"
+                                   placeholder="邮箱"
+                                   class="none-input"
+                                   value="">
+                            <input style="width:100%" id="mobile" name="mobile" type="text"
+                                   placeholder="手机号"
+                                   class="none-input"
+                                   value="">
+                            <input id="password" style="width:100%"
+                                   name="password"
+                                   placeholder="密码"
+                                   class="none-input" type="password">
+                            <input style="margin-top:15px;" id="btn-submit" type="submit"
+                                   class="btn btn-big btn-block" value="注册">
+                        </form>
+                    </div>
+                </div>
+                <div style="margin-top:30px;" class="row">
+                    <div class="col-md-8 text-center col-md-offset-2">
+                        <span class="description-font">已有账号？</span><a
+                            href="{% url 'user:login' %}">登录</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+</div>
+{% block myjs %}
+    <script>
+        $(function () {
+            $('#mobile').blur(function () {
+                var mobile = document.getElementById('mobile').value;
+                if(!(/^1[34578]\d{9}$/.test(mobile))){
+                    alert("手机号码有误，请重填");
+                    return false;
+                }
+            })
+        })
+    </script>
+{% endblock %}

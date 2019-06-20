@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block header %}
+ {% include 'include.html' %}
+{% endblock %}
+
+{% block mycss %}
+    <style>
+        .page{
+            text-align:center;
+        }
+    </style>
+{% endblock %}
+
+<div class='container'>
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+        </div>
+    </div>
+    <div id="books" class="row">
+        {% for book in page.object_list %}
+            <div class="col-sm-4 book-container">
+                <a href="{% url 'book:bookdetail' %}?id={{ book.id }}" class="link">
+                    <div class="col-md-4 no-padding">
+                        <img class="book-img cssshadow" src="{{ MEDIA_URL }}{{ book.image }}" >
+                    </div>
+                    <div style="margin-left: 0;" class="col-md-8 flex-vertical book-info">
+                        <span class="title">{{ book.title }}</span>
+                        <div class="description-font"><span>作者：</span><span>{{ book.author }}</span>
+                        </div>
+                        <span class="summary description-font">{{ book.summary }}</span>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+
+    {#分页#}
+    <div class="page">
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <li>
+              <a href="{% url 'index' %}?page=1" aria-label="Previous">
+                <span aria-hidden="true">&lt;&lt;</span>
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'index' %}?page={% if page.has_previous %}{{ page.previous_page_number }}{% else %}1{% endif %}" aria-label="Previous">
+                <span aria-hidden="true">&lt;</span>
+              </a>
+            </li>
+
+            {# 全部页码 #}
+        {% for page_list in  page_list %}
+            {% if page.number == page_list %}  {# 是否是当前页 1 #}
+                <li><a href="#">{{ page_list }}</a></li>
+            {% else %}
+                {% if page_list == '...' %}
+                    <li><a href="#">{{ page_list }}</a></li>
+                {% else %}
+                    <li><a href="{% url 'index' %}?page={{ page_list }}">{{ page_list }}</a></li>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+
+            <li>
+              <a href="{% url 'index' %}?page={% if page.has_next %}{{ page.next_page_number }}{% else %}{{ page.paginator.num_pages }}{% endif %}" aria-label="Next">
+                <span aria-hidden="true">&gt;</span>
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'index' %}?page={{ page.paginator.num_pages }}" aria-label="Next">
+                <span aria-hidden="true">&gt;></span>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <span aria-hidden="true">共{{ page.paginator.num_pages }}页</span>
+              </a>
+            </li>
+        </ul>
+    </nav>
+    </div>
+
+{% endblock %}
+</div>
+

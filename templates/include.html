@@ -1,0 +1,73 @@
+{% load staticfiles %}
+<div class="nav-self">
+        <div style="padding-top: inherit" class="container">
+            <form class="form-inline" action="{% url 'index' %}" method="get">
+
+                <div class="flex-vertical-center-height">
+                    <div class="col-md-2  col-xs-3 logo">
+                        <img src="{% static 'images/logo-yushu.png' %}"/>
+                    </div>
+                    <div style="margin-left:20px;" class="col-md-7  col-xs-6 input-group">
+                        <input name="q" type="text" placeholder="ISBN、图书名称"
+                               class="form-control input-sm">
+                        <span class="input-group-btn">
+                            <input class="btn btn-search" type="submit" value="搜索"/>
+                        </span>
+                    </div>
+                    <div class="col-md-3 col-xs-3" style="padding-right: 0">
+                        <div class="container-height flex-vertical-center login-box">
+
+                                <div style="height: 100%; width: 100%;display: flex; justify-content: flex-end; align-items: center">
+                                     {% if request.user.is_authenticated %}
+                                         <a href="{% url 'user:personal' %}">{{ request.user.username }}的鱼书</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                         <a href="{% url 'user:logout' %}">注销</a>
+                                     {% else %}
+                                         <a href="{% url 'user:login' %}">登录</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                         <a class="btn-end" href="{% url 'user:register' %}">注册</a>
+                                     {% endif %}
+
+{#                                    <a href="login.htm" >登录</a>#}
+{#                                    <a  href="register.html" >注册</a>#}
+                                </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="sub-nav flex-vertical-center">
+        <div class="container" style="width: 100%">
+            <div class="row">
+                <div class="col-md-2 col-xs-3 col-md-offset-2">
+                    <a id="recent" href="{% url 'index' %}"
+                       class="flex-vertical-hor-center">
+                        <img src="{% static 'images/upload.png' %}"/>
+                        <span>最近上传</span>
+                    </a>
+                </div>
+                <div class="col-md-2 col-xs-3">
+                    <a id="gifts" href="{% url 'book:mygift' %}"
+                       class="flex-vertical-hor-center">
+                        <img src="{% static 'images/gift.png' %}" />
+                        <span>赠送清单</span>
+                    </a>
+                </div>
+                <div class="col-md-2 col-xs-3">
+                    <a id="wishes" href="{% url 'book:mywish' %}"
+                       class="flex-vertical-hor-center">
+                        <img src="{% static 'images/wish.png' %}" />
+                        <span>心愿清单</span>
+                    </a>
+                </div>
+                <div class="col-md-2 col-xs-3">
+                    <a id="pending" href="{% url 'book:pending' %}"
+                       class="flex-vertical-hor-center">
+                        <img src="{% static 'images/fish.png' %}"/>
+                        <span>鱼漂</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>

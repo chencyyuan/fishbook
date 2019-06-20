@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block header %}
+ {% include 'include.html' %}
+{% endblock %}
+
+<div class='container'>
+{% block content %}
+    <div class="row">
+    </div>
+
+    <div class="row flex-vertical-center">
+        <div style="margin-top:20px;" class="col-md-6">
+            <span class="sub-title">我想赠送的书籍  共  {{ gifts | length }} 本</span>
+            <hr>
+        </div>
+    </div>
+    {% for gift in gifts %}
+        <div class="row my-gifts-row">
+            <a href="{% url 'book:bookdetail' %}?id={{ gift.bookid.id }}" class="">
+                <div style="margin-bottom:30px; display: flex; justify-content: space-between"
+                     class="col-md-9 col-padding content-box">
+                    <div style="display: flex; justify-content: flex-start; flex-grow: 1">
+                        <div class="col-md-2 img-box">
+                            <img class="book-img-small shadow" src="{{ MEDIA_URL }}{{ gift.bookid.image }}">
+                        </div>
+                        <div style="margin-top:6px;" class="col-md-6 flex-vertical">
+                            <span id="title"
+                                  class="book-middle-title">{{ gift.bookid.title }}</span>
+                            <div style="margin-top:6px;"
+                                 class="flex-vertical description-font">
+                                <span id="author">{{ gift.bookid.author }}</span>
+                                <span id="publisher">{{ gift.bookid.publisher }}</span>
+                                <span id="price">￥{{ gift.bookid.price }}元</span>
+                                <span id="isbn">{{ gift.bookid.isbn }}</span>
+                            </div>
+                            {% if gift.launched == 0 %}
+                                <a class="link-normal"
+                                   href="{% url 'book:cancelgift' %}?bid={{ gift.bookid.id }}">
+                                    撤销
+                                </a>
+                            {% elif gift.launched == 1 %}
+                                <a class="link-normal"
+                                   href="{% url 'book:pending' %}">
+                                    交易中
+                                 </a>
+                            {% else %}
+                                <a class="link-normal"
+                                   href="{% url 'book:bookdetail' %}?id={{ gift.bookid.id }}">
+                                    已赠送此书
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-3 flex-vertical" style="padding: 0">
+                            <a href="{% url 'book:bookdetail' %}?id={{ gift.bookid.id }}">
+                                    {% for wish in wishall %}
+                                        {% if gift.bookid.id == wish.id %}
+                                            <span class="bg-info">
+                                            {{ wish.bcount }}人想要
+                                            </span>
+                                        {% endif %}
+                                    {% endfor %}
+                            </a>
+
+                    </div>
+                </div>
+            </a>
+        </div>
+    {% endfor %}
+
+
+    
+{% endblock %}
+</div>
+
+{% block myjs %}
+    <script src="{% static 'js/util.js' %}"></script>
+{#    <script src="{% static 'js/search_result.js' %}"></script>#}
+{% endblock %}

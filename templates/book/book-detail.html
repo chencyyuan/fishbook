@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block mycss %}
+    <link rel="stylesheet" href="{% static 'css/remodal.css' %}">
+    <link rel="stylesheet" href="{% static 'css/remodal-default-theme.css' %}">
+    <link rel="stylesheet" href="{% static 'css/book-detail.css' %}">
+{% endblock %}
+
+{% block header %}
+ {% include 'include.html' %}
+{% endblock %}
+
+<div class='container'>
+{% block content %}
+   <div class="row book-container">
+        <div class="col-md-2">
+            <img class="book-img" src="{{ MEDIA_URL }}{{ book.image }}"/>
+        </div>
+        <div style="margin-left: 30px;" class="col-md-5 flex-vertical">
+            <div>
+                <h4>{{ book.title }}</h4>
+            </div>
+            <div class="description-font-margin">
+                <div>
+                    <span>作者:</span>
+                    <span>{{ book.author }}</span>
+                </div>
+                <div>
+                    <span>出版社:</span>
+                    <span>{{ book.publisher }}</span>
+                </div>
+                <div>
+                    <span>出版年：</span>
+                    <span>{{ book.pubdate }}</span>
+                </div>
+                <div>
+                    <span>页数：</span>
+                    <span>{{ book.pages }}</span>
+                </div>
+                <div>
+                    <span>定价：</span>
+                    <span>￥{{ book.price }}元</span>
+                </div>
+                <div>
+                    <span>精装：</span>
+                    <span>{{ book.binding }}</span>
+                </div>
+                <div>
+                    <span>ISBN：</span>
+                    <span id="isbn">{{ book.isbn }}</span>
+                </div>
+                {% if giftcount or wishcount %}
+                    <div class="color-count">
+                        <span>{{ wishcount }}人想要 / </span>
+                        <span>{{ giftcount}}人可赠送</span>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div style="margin-top:30px;" class="row">
+        {% if not has_in_gifts and not has_in_wishs %}
+            <div class="col-md-1">
+                <span class="zengsong">
+                <a class="btn btn-outline" href="#">
+                    赠送此书
+                </a></span>
+            </div>
+            <div style="margin-left:30px;" class="col-md-1">
+                <a class="btn btn-outline" href="#">
+                    <span class="xinyuan">加入到心愿清单</span>
+                </a>
+            </div>
+        {% elif has_in_wishs %}
+            <div class="col-md-3">
+                <span class="bg-info">已添加至心愿清单</span>
+            </div>
+        {% else %}
+            <div class="col-md-3">
+                <span class="bg-info">已添加至赠送清单</span>
+            </div>
+        {% endif %}
+    </div>
+    <div style="margin-top: 30px;" class="row">
+        <div class="col-md-2"><span class="description-title">内容简介</span></div>
+    </div>
+    <div style="margin-top:15px;" class="row">
+        <div class="col-md-11">
+            <p class="description-font">{{ book.summary }}</p>
+        </div>
+    </div>
+    {% if giftcount != 0 and not has_in_gifts %}
+        <div style="margin-top:30px;" class="row">
+            <div class="col-md-3"><span class="description-title">向他们请求此书</span></div>
+        </div>
+        <hr style="margin-top:5px;"/>
+        {% for gift in trade_gifts %}
+            <div style="margin-top:30px;" class="row">
+                <div class="col-md-1">
+                    {{ gift.uid.username }}
+                </div>
+                <div class="col-md-2 description-font">
+                    上传于{{ gift.date |date:"Y-m-d"}}
+                </div>
+                <div class="col-md-2">
+                    <span class="qingqiu"><a class="btn-normal" href="{% url 'book:senddrif' %}?gid={{ gift.id }}">
+                        向他请求此书</a>
+                    </span>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% if wishcount != 0 and has_in_gifts %}
+        <div style="margin-top:30px;" class="row">
+            <div class="col-md-3"><span class="description-title">向他们赠送此书</span></div>
+        </div>
+        <hr style="margin-top:5px;"/>
+        {% for wish in trade_wishs %}
+            <div style="margin-top:30px;" class="row">
+                <div class="col-md-1">
+                    {{ wish.uid.username }}
+                </div>
+                <div class="col-md-2 description-font">
+                    上传于{{ wish.date |date:"Y-m-d" }}
+                </div>
+                <div class="col-md-2">
+                    <span class="sendwish">
+                        <a class="btn-normal" href="{% url 'book:satisifywish' %}?wid={{ wish.id }}">
+                        向他赠送此书</a>
+                    </span>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{#    <div class="remodal" data-remodal-id="modal" role="dialog"#}
+{#         aria-labelledby="modal1Title" aria-describedby="modal1Desc"#}
+{#         data-remodal-options="closeOnOutsideClick: false">#}
+{#        <button data-remodal-action="close" class="remodal-close"#}
+{#                aria-label="Close"></button>#}
+{#        <div>#}
+{#            <h5 class="diag-title">#}
+{#                您确定拥有《{{ book.title }}》这本书吗？</h5>#}
+{#            <p id="modal1Desc" class="description-font">#}
+{#                如果您不想赠送此书，或者没有这本书，请不要随意发布虚假信息。谢谢你的支持和理解。#}
+{#            </p>#}
+{#        </div>#}
+{#        <br>#}
+{#        <button data-remodal-action="confirm" class="remodal-confirm">确定赠送</button>#}
+{#        <button data-remodal-action="cancel" class="remodal-cancel">不，算了</button>#}
+{#    </div>#}
+{% endblock %}
+</div>
+{% block myjs %}
+    <script>
+        $SCRIPT_ROOT = "";
+    </script>
+{#    <script src="{% static 'js/remodal.min.js' %}"></script>#}
+    <script src="{% static 'js/book-detail.js' %}"></script>
+    <script>
+     $(function () {
+         $('.qingqiu').click(function () {
+             alert("您确定拥有这本书吗？" +
+                 "如果您不想赠送此书，或者没有这本书，请不要随意发布虚假信息。谢谢你的支持和理解。")
+         });
+         //zengsong
+         $('.zengsong').click(function () {
+                 $.getJSON('{% url 'book:savegift' %}',{bid:'{{ book.id }}'},function (data) {
+                      if(data.status == 2){
+                        alert('您还未登录，登录才能操作哦！！！')
+                      }
+                     else if(data.status==1){
+                         alert('这本书以添加进您的赠送清单或已经存在于您的心愿清单，请不要重复添加')
+                     }else{
+                         alert('添加成功！')
+                         window.location.href="{% url 'book:bookdetail' %}?id={{ book.id }}"
+                      }
+                 })
+             })
+
+        //xinyuan
+        $('.xinyuan').click(function () {
+             $.getJSON('{% url 'book:savewish' %}',{bid:'{{ book.id }}'},function (data) {
+                  if(data.status == 2){
+                    alert('您还未登录，登录才能操作哦！！！')
+                  }
+                 else if(data.status==1){
+                     alert('这本书以添加进您的赠送清单或已经存在于您的心愿清单，请不要重复添加')
+                  }else{
+                     alert('添加成功！')
+                     window.location.href="{% url 'book:bookdetail' %}?id={{ book.id }}"
+
+                  }
+             })
+         })
+
+         //sendwish 向他赠送此书
+         $('.sendwish').click(function () {
+            alert('已向他/她发送了一封邮件，如果他/她愿意接受你的赠送，你将收到一个鱼漂')
+         })
+     });
+    </script>
+{% endblock %}

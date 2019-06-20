@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+
+<div class='container'>
+{% block content %}
+    <div class="row">
+    </div>
+
+    <div class="row white-bg-margin">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="row">
+                {% if msg %}
+                    <div class="alert alert-warning" role="alert">{{ msg }}</div>
+                {% endif %}
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <a onclick="window.history.go(-1)" href="#">返回</a>
+                </div>
+            </div>
+            <div class="bg-container">
+                <div class="row">
+                    <div class="col-md-4 col-md-offset-4 text-center">
+                        <span class="big-title">鱼 书</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2 flex-vertical personal-detail">
+                         <h4><span><a href="{% url 'user:login' %}">密码登录</a></span><span>|</span><span><a href="#"  style="color: skyblue">验证码登录</a></span></h4>
+                        <form action="{% url 'user:codelogin' %}" method="post">{% csrf_token %}
+                            <input style="width:100%" id="mobile" name="mobile" type="text"
+                                   placeholder="手机号"
+                                   class="none-input"
+                                   value="">
+                            <div style="margin-top:3px;" class="password-box">
+                                <input id="password1"
+                                       name="code"
+                                       placeholder="输入验证码"
+                                       class="none-input" type="password" style="width: 100%;">
+{#                                <input type="button" id="fasong" style="height: 42px;" value="发送验证码">#}
+                            </div>
+                            <input style="margin-top:15px;" type="submit" class="btn btn-big btn-block" value="登录">
+                        </form>
+                        <input type="button" id="fasong" style="height: 42px;" value="发送验证码">
+                    </div>
+                </div>
+                <div style="margin-top:30px;" class="row">
+                    <div class="col-md-8 text-center col-md-offset-2">
+                        <span class="description-font">没有账号？</span><a
+                            href="{% url 'user:register' %}">注册</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+</div>
+{% block myjs %}
+    <script>
+        $('#fasong').click(function () {
+                var mobile=$('#mobile').val();
+                if(mobile.length == 11){
+                    $.getJSON('{% url 'user:sendcode' %}',{'mobile':mobile},function (data) {
+                        alert('11222')
+                       if (data.status==501){
+                           flag=confirm(data.msg+',是否跳转注册页面进行注册？')
+                           if (flag){
+                               window.location.href='{% url 'user:register' %}'
+                           }
+                       }else{
+                           alert(data.msg)
+                       }
+                    })
+                }else{
+                    alert('输入正确的手机号码！')
+                }
+            })
+    </script>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block header %}
+ {% include 'include.html' %}
+{% endblock %}
+
+<div class='container'>
+{% block content %}
+    <div class="row">
+   </div>
+    <div class="row flex-vertical-center">
+        <div style="margin-top:20px;" class="col-md-6">
+            <span class="sub-title">我想要的书籍  共 {{ wishs | length }} 本</span>
+            <hr>
+        </div>
+    </div>
+    {% for wish in wishs %}
+        <div class="row my-gifts-row">
+            <a href="{% url 'book:bookdetail' %}?id={{ wish.bookid.id }}" class="">
+                <div style="margin-bottom:30px; display: flex" class="col-md-9 col-padding content-box">
+                    <div style="display: flex; justify-content: flex-start; flex-grow: 1">
+                        <div class="col-md-2 img-box">
+                            <img class="book-img-small shadow" src="{{ MEDIA_URL }}{{ wish.bookid.image }}">
+                        </div>
+                        <div style="margin-top:6px;" class="col-md-6 flex-vertical">
+                            <span id="title"
+                                  class="book-middle-title">{{ wish.bookid.title }}</span>
+                            <div style="margin-top:6px;"
+                                 class="flex-vertical description-font">
+                                <span id="author">{{ wish.bookid.author }}</span>
+                                <span id="publisher">{{ wish.bookid.publisher }}</span>
+                                <span id="price">￥{{ wish.bookid.price }}元</span>
+                                <span id="isbn">{{ wish.bookid.isbn }}</span>
+                            </div>
+                             {% if wish.launched == 0 %}
+                                <a class="link-normal"
+                                   href="{% url 'book:cancelwish' %}?bid={{ wish.bookid.id }}">
+                                    撤销
+                                 </a>
+                             {% elif wish.launched == 1 %}
+                                 <a class="link-normal"
+                                   href="{% url 'book:pending' %}">
+                                    交易中
+                                 </a>
+                             {% else %}
+                                 <a class="link-normal"
+                                     href="{% url 'book:bookdetail' %}?id={{ wish.bookid.id }}">
+                                    已获得此书
+                                 </a>
+                            {% endif %}
+
+
+
+                        </div>
+                    </div>
+                    <div class="col-md-3 flex-vertical" style="padding: 0">
+                            <a href="{% url 'book:bookdetail' %}?id={{ wish.bookid.id }}">
+                                {% for gift in giftall %}
+                                    {% if wish.bookid.id == gift.id %}
+                                        <span class="bg-info">
+                                        {{ gift.bcount }}人赠送
+                                        </span>
+                                    {% endif %}
+                                {% endfor %}
+                            </a>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+{% endblock %}
+</div>
+{% block myjs %}
+    <script src="{% static 'js/util.js' %}"></script>
+{% endblock %}
