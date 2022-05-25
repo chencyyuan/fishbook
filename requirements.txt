@@ -47,7 +47,7 @@ Pillow==6.0.0
 plotly==3.9.0
 plotly-express==0.1.7
 pycryptodomex==3.7.2
-PyJWT==1.7.1
+PyJWT==2.4.0
 PyMySQL==0.9.3
 pyrsistent==0.15.1
 python-alipay-sdk==1.10.0
